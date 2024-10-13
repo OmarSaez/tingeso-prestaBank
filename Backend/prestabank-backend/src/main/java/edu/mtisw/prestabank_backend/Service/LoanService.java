@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoanService {
@@ -61,6 +62,15 @@ public class LoanService {
 
         return result; // Devuelve el resultado
     }
+
+    /*
+
+    //Buscar un prestamo por estatus de aprobacion o rechazo
+    public List<LoanEntity> getLoanByStatusloan(int status){
+
+    }
+
+     */
 
 
 
