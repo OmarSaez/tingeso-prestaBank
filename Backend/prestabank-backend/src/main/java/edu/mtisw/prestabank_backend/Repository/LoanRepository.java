@@ -8,11 +8,10 @@ import java.util.List;
 
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity, Long> {
+    // Buscar los creditos de un usuario
     public List<LoanEntity> findByIdUser(Long idUser);
-
-    public List<LoanEntity> findByStatusLoan(int status);
-
-    public List<LoanEntity> findByStatusAppli(int status);
-
+    // Buscar por apruebo o rechazo
+    public List<LoanEntity> findByStatus(int status);
+    // Buscar por el tipo de credito
     public List<LoanEntity> findByType(int type);
 }

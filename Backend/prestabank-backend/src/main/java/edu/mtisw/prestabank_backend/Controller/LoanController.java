@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,6 @@ public class LoanController {
     @PutMapping("/")
     public ResponseEntity<LoanEntity> updateLoan(@RequestBody LoanEntity changeLoan) {
         LoanEntity updateLoan = loanService.updateLoan(changeLoan);
-        changeLoan.calculateMonthlyPayment();
         return ResponseEntity.ok(updateLoan);
     }
 
@@ -58,6 +58,18 @@ public class LoanController {
         return ResponseEntity.noContent().build();
     }
 
+    //URL buscar todos los prestamos por rechazo o apruebo
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<LoanEntity>> listStatusLoans(@PathVariable int status){
+        List<LoanEntity> loans = loanService.getLoanByStatus(status);
+        return ResponseEntity.ok(loans);
+    }
 
 
+    //URL buscar todos los prestamos por tipo
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<LoanEntity>> listTypeLoans(@PathVariable int type){
+        List<LoanEntity> loans = loanService.getLoanByType(type);
+        return ResponseEntity.ok(loans);
+    }
 }
