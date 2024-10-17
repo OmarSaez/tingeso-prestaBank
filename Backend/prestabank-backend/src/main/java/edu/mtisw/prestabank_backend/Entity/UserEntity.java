@@ -31,12 +31,12 @@ public class UserEntity {
         this.email = email;
     }
 
-    public String getPasword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPasword(String pasword) {
-        this.password = pasword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {
