@@ -35,7 +35,7 @@ public class LoanEntity {
 
     private ArrayList<String> papers; //Se agrega- Documentacion a evaluar manualmente
 
-    private ArrayList<Integer> evalue; //   Listado que indica automaticamente las cosas 0=rechazado, 1=aprobado y 2=pendiente [R1, R2, R3, R4, R6, R7]
+    private ArrayList<Integer> evalue; //   Listado que indica automaticamente las cosas 0=rechazado, 1=aprobado, 2=pendiente. 3=Requiere otra revision [R1, R2, R3, R4, R6, R7]
 
 
     public LoanEntity(Long idUser, int type, int yearInterest, int maxDuration, int maxLoan, int income, int veteran, int totaldebt, double monthlyPayment, double loanAmount, double monthlyInteresRate, int totalPayments, ArrayList<Integer> saving, ArrayList<String> papers, ArrayList<Integer> evalue) {

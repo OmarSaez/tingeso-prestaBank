@@ -72,4 +72,11 @@ public class LoanController {
         List<LoanEntity> loans = loanService.getLoanByType(type);
         return ResponseEntity.ok(loans);
     }
+
+    //URL update para un Ejecutivo
+    @PutMapping("/executive")
+    public ResponseEntity<LoanEntity> updateLoanWithExecutive(@RequestBody LoanEntity changeLoan, @RequestParam int acountYears, @RequestParam ArrayList<Integer> balanceLast12){
+        LoanEntity updateLoan = loanService.updateLoanWithExcutive(changeLoan, acountYears, balanceLast12);
+        return ResponseEntity.ok(updateLoan);
+    }
 }

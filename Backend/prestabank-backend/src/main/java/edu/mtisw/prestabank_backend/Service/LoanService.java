@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Service
 public class LoanService {
 
@@ -25,9 +22,6 @@ public class LoanService {
 
     @Autowired
     UserRepository userRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(LoanService.class);
-
 
     //rescatar todos los prestamos todo bien
     public ArrayList<LoanEntity> getLoans() {
@@ -42,39 +36,29 @@ public class LoanService {
     //Guardar un prestamo todo bien
     public LoanEntity saveLoan(LoanEntity saveLoan) {
 
-        logger.info("--Se ingreso al save");
-
         saveLoan.setMonthlyInteresRate(saveLoan.getYearInterest()/12/100);
         saveLoan.setTotalPayments(saveLoan.getMaxDuration()*12);
 
-
-
         Double CalculeMonthlyPayment = Calculo(saveLoan);
         saveLoan.setMonthlyPayment(CalculeMonthlyPayment);
-        logger.info("--Resultado de la cuota {}", CalculeMonthlyPayment);
-        logger.info("--Calculo cuota mensual guardado: {}", saveLoan.getMonthlyPayment());
 
         int EvalueWithR1 = paymentToIncome(saveLoan);
-        logger.info("--Salido R1 {}", EvalueWithR1);
+
         //R2 no se puede evaluar automaticamente
 
         int EvalueWithR3 = seniority(saveLoan);
-        logger.info("--Salido R3 {}", EvalueWithR3);
 
         int EvalueWithR4 = debtToIncome(saveLoan);
-        logger.info("--Salido R4 {}", EvalueWithR4);
 
         //R5 es tabla, no se verifica aca
 
         int EvalueWithR6 = yearOld(saveLoan);
-        logger.info("--Salido R6 {}", EvalueWithR6);
 
         //La primera vez que se guarda, no se puede ingresar los datos necesarios para usar la funcion R7, son datos proporcionador por el evaluador (ejecutivo), se pone R7=2 de pendiente
 
         ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, 2));
+
         saveLoan.setEvalue(newEvalue);
-        logger.info("--Se guardo la lista Evalue con todos los Rs {}", newEvalue);
-        logger.info("--Todo lo guardado: {}", saveLoan);
 
         return loanRepository.save(saveLoan);
     }
@@ -98,9 +82,89 @@ public class LoanService {
     }
 
 
-    //Modificar un prestamo
+    //Modificar un prestamo todo bien
     public LoanEntity updateLoan(LoanEntity changeLoan) {
-        //changeLoan.calculateMonthlyPayment();  //---------------PENDIENTE CORREGIRLOOOOOOOOOO, agregar toda le evaluacion de Rs e incluir ahora R7--------------
+        changeLoan.setMonthlyInteresRate(changeLoan.getYearInterest()/12/100);
+        changeLoan.setTotalPayments(changeLoan.getMaxDuration()*12);
+        changeLoan.setMonthlyPayment(Calculo(changeLoan));
+
+        int EvalueWithR1 = paymentToIncome(changeLoan);
+
+        //R2 no se puede evaluar automaticamente
+
+        int EvalueWithR3 = seniority(changeLoan);
+
+        int EvalueWithR4 = debtToIncome(changeLoan);
+
+        //R5 es tabla, no se verifica aca
+
+        int EvalueWithR6 = yearOld(changeLoan);
+
+        //La primera vez que se guarda, no se puede ingresar los datos necesarios para usar la funcion R7, son datos proporcionador por el evaluador (ejecutivo), se pone R7=2 de pendiente
+
+        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, 2));
+        changeLoan.setEvalue(newEvalue);
+
+        return loanRepository.save(changeLoan);
+    }
+
+    //Modificar un prestamo usado al momento de evaluar, ya que requiere entradas proporcionadas por un ejecutivo evaluador todo bien
+    public LoanEntity updateLoanWithExcutive(LoanEntity changeLoan, int acountYears, ArrayList<Integer> balanceLast12) {
+
+        ArrayList<Integer> bankDeposit = new ArrayList<>(); //se inicia la lista de despositos
+        ArrayList<Integer> withdrawals = new ArrayList<>();// se inicia la lista de retiros
+
+        bankDeposit.add(1);
+        withdrawals.add(0);
+        int evalue = 0;
+        for (int i = 1; i < balanceLast12.size(); i++){
+            evalue = balanceLast12.get(i)-balanceLast12.get(i-1); //mes actual menos el mes anterior
+            if (evalue >= 0){//Se es mayor que cero, se deposito
+                bankDeposit.add(evalue);
+                withdrawals.add(0);
+            }else{//Si es negativo entonces se retiro dinero
+                bankDeposit.add(0);
+                withdrawals.add(evalue*(-1));
+            }
+
+        }
+
+        //Re calculo de la cuota
+        changeLoan.setMonthlyInteresRate(changeLoan.getYearInterest()/12/100);
+        changeLoan.setTotalPayments(changeLoan.getMaxDuration()*12);
+        changeLoan.setMonthlyPayment(Calculo(changeLoan));
+
+        //Evaluacion del prestamo
+        int EvalueWithR1 = paymentToIncome(changeLoan);
+
+        //R2 no se puede evaluar automaticamente
+
+        int EvalueWithR3 = seniority(changeLoan);
+
+        int EvalueWithR4 = debtToIncome(changeLoan);
+
+        //R5 es tabla, no se verifica aca
+
+        int EvalueWithR6 = yearOld(changeLoan);
+
+        ArrayList<Integer> saving = savingSkills(changeLoan, acountYears, balanceLast12, bankDeposit, withdrawals);
+        changeLoan.setSaving(saving);
+        int acum = 0;
+        //Acumulador de los puntos de ahorro
+        for (int i = 0; i < saving.size(); i++) {
+            acum = saving.get(i) + acum;
+        }
+
+        int EvalueWithR7 = 2;
+
+        if (acum >= 5){EvalueWithR7 = 1;}
+        if (acum == 4){EvalueWithR7 = 3;}
+        if (acum == 3){EvalueWithR7 = 3;}
+        if (acum < 3){EvalueWithR7 = 0;}
+
+        ArrayList<Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, EvalueWithR7));
+        changeLoan.setEvalue(newEvalue);
+
         return loanRepository.save(changeLoan);
     }
 
@@ -155,7 +219,7 @@ public class LoanService {
         int income = loan.getIncome();
         double monthlyPayment = loan.getMonthlyPayment();
         double ratio = (monthlyPayment / income) * 100;
-        logger.info("--R1 ratio = {}/{} * 100 = {}", monthlyPayment, income, ratio);
+
         if (ratio > 35) {
             return 0;
         } else {
@@ -194,11 +258,9 @@ public class LoanService {
     public int yearOld(LoanEntity loan) {
         Long idUser = loan.getIdUser();
 
-        logger.info("--R6 Procesando préstamo para el usuario con ID: {}", idUser);
-
         UserEntity user = userRepository.findById(idUser).get();
         int edad = calcularYearOld(user.getBirthDay(), user.getBirthMonth(), user.getBirthYear());
-        logger.info("--R6 edad: {}", edad);
+
         if (edad > 69) {
             return 0;
         } else {
@@ -209,18 +271,18 @@ public class LoanService {
     //R7 Verificar la capacidad de ahorro, se utiliza una tabla de puntaje
 
     //(Credito, Frecuencia de depositos, Años de antiguedad de la cuenta, list(Saldo ultimos 12 meses), list(Retiro de los ultimos 12 meses)
-    public ArrayList<Integer> savingSkills(LoanEntity loan, int depositFrequency, int acountYears, ArrayList<Integer> balanceLast12, ArrayList<Integer> last12Withdrawals) {
+    public ArrayList<Integer> savingSkills(LoanEntity loan, int acountYears, ArrayList<Integer> balanceLast12, ArrayList<Integer> bankDeposit, ArrayList<Integer> withdrawals) {
         ArrayList<Integer> listEvalue = new ArrayList<>();
         //agregamos R71
         listEvalue.add(minBalance(balanceLast12.get(0), loan.getLoanAmount()));
         //Agregamos R72
-        listEvalue.add(recordSaving(balanceLast12, last12Withdrawals));
+        listEvalue.add(recordSaving(balanceLast12, withdrawals));
         //Agregamos R73
-        listEvalue.add(periodicDeposits(balanceLast12, loan.getIncome(), depositFrequency));
+        listEvalue.add(periodicDeposits(bankDeposit, loan.getIncome()));
         //Agremos R74
         listEvalue.add(ratioBalanceVeteran(acountYears, balanceLast12, loan.getLoanAmount()));
         //Agregamos R75
-        listEvalue.add(recentWithdrawals(last12Withdrawals, loan.getIncome()));
+        listEvalue.add(recentWithdrawals(withdrawals, loan.getIncome()));
 
         return listEvalue;
     }
@@ -246,9 +308,10 @@ public class LoanService {
             }
         }
 
-        for (int i = 0; i < last12Withdrawals.size(); i++) {
+        for (int i = 1; i < last12Withdrawals.size(); i++) {
+
             int value = last12Withdrawals.get(i);
-            int balance = balanceLast12.get(i);
+            int balance = balanceLast12.get(i-1);
             if (value > balance * 0.5) {
                 return 0;
             }
@@ -258,19 +321,27 @@ public class LoanService {
     }
 
     //R73 verificar si los depositos son periodicos y la suma total suman almenos un 5% del ingreso mensual
-    public int periodicDeposits(ArrayList<Integer> balanceLast12, int income, int frecuencyDeposits) {
+    public int periodicDeposits(ArrayList<Integer> bankDeposit12, int income) {
 
+        int frecuencyDeposits = 0;
+
+        int acum = 0;
+        //Acumulador que calcula el saldo total de los ultimos 12 meses
+        for (int i = 0; i < bankDeposit12.size(); i++) {
+            acum = bankDeposit12.get(i) + acum;
+            if (bankDeposit12.get(i) > 0){
+                frecuencyDeposits = frecuencyDeposits + 1;
+            }
+        }
+
+        frecuencyDeposits = frecuencyDeposits/12;
+
+        //Verifica la frecuencia de deposito
         if (frecuencyDeposits > 3) {
             return 0;
         }
 
-        int acum = 0;
-        //Acumulador que calcula el saldo total de los ultimos 12 meses
-        for (int i = 0; i < balanceLast12.size(); i++) {
-            acum = balanceLast12.get(i) + acum;
-        }
         //verifica si el acumulado es mayor al 5% del ingreso mensual
-
         if (acum < income * 0.05) {
             return 0;
         } else {
@@ -305,9 +376,12 @@ public class LoanService {
         }
     }
 
-    //R75 verifica si los retiros de los ultimos 6 meses son mayores a 30% del saldo actual
+    //R75 verifica si los retiros de los ultimos 6 meses son mayores a 30% del saldo actual, PENDIENTE LIMITAR A SOLO 6 MESES, se puede hacer con el largo de la lista
     public int recentWithdrawals(ArrayList<Integer> last12Withdrawals, double income){
-        for (int i = 0; i <= 6; i++) {
+
+        int large = last12Withdrawals.size();
+        large = large-6;
+        for (int i = large; i < last12Withdrawals.size(); i++) {
             int value = last12Withdrawals.get(i);
             if (value > income * 0.3) {return 0;}
         }
