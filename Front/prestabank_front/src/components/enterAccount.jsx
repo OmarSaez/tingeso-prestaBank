@@ -13,6 +13,10 @@ const EnterAccount = () => {
         navigate('/create'); //Redigire a la ruta para crear cuenta
     }
 
+    const loginAccount = () => {
+        navigate('/login');
+    }
+
     //Cosas a poner en pantalla
     return(
         <div>
@@ -46,6 +50,7 @@ const EnterAccount = () => {
 
                 <Button //Boton de logearse
                     variant="contained" // Cambia el estilo del botón
+                    onClick={loginAccount}
                     sx={{
                     bgcolor: 'primary.main', // Color de fondo
                     color: 'white', // Color del texto

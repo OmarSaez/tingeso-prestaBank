@@ -79,4 +79,14 @@ public class LoanController {
         LoanEntity updateLoan = loanService.updateLoanWithExcutive(changeLoan, acountYears, balanceLast12);
         return ResponseEntity.ok(updateLoan);
     }
+
+    @PostMapping("/simulate")
+    public ResponseEntity<Double> simulateLoan(@RequestBody LoanSimulationRequest request) {
+        double monthlyPayment = loanService.simulateLoan(
+                request.getLoanAmount(),
+                request.getMonthlyInterestRate(),
+                request.getTotalPayments()
+        );
+        return ResponseEntity.ok(monthlyPayment);
+    }
 }

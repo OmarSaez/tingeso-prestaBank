@@ -3,6 +3,7 @@ package edu.mtisw.prestabank_backend.Controller;
 import edu.mtisw.prestabank_backend.Entity.UserEntity;
 import edu.mtisw.prestabank_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,11 @@ public class UserController {
     }
     //Guardar un usuario
     @PostMapping("/")
-    public ResponseEntity<UserEntity> saveUser(@RequestBody UserEntity user){
+    public ResponseEntity<?> saveUser(@RequestBody UserEntity user) {
         UserEntity newUser = userService.saveUser(user);
+        if (newUser == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El correo o rut ya está registrado.");
+        }
         return ResponseEntity.ok(newUser);
     }
     //Actualizar un usuario

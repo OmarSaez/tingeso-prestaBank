@@ -7,19 +7,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
 
     @Autowired
     UserRepository userRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class); //MEnsaje por cosnla
+
     public ArrayList<UserEntity> getUsers() {return (ArrayList<UserEntity>) userRepository.findAll(); }
 
     public UserEntity saveUser(UserEntity user){
-        UserEntity exists = userRepository.findUserByEmail(user.getEmail());
-        if (exists != null){
+        logger.info("--Se entro al guardar user bien");
+        UserEntity exists1 = userRepository.findUserByEmail(user.getEmail());
+        UserEntity exists2 = userRepository.findByRut(user.getRut());
+        if (exists1 != null || exists2 != null){
+            logger.info("--Se evaluo la situacion y dio NULL");
             return null;
         }
+        logger.info("--Se evaluo la situacion y se guardo el user");
         return userRepository.save(user);}
 
     public UserEntity getUserById(Long id){return userRepository.findById(id).get();}

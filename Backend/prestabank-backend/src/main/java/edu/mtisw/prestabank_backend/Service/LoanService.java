@@ -192,10 +192,21 @@ public class LoanService {
         return (ArrayList<LoanEntity>) loanRepository.findByStatus(status);
     }
 
-    //Busca todos los prestamos todo bien
+    //Busca todos los prestamos por el tipo todo bien
     public ArrayList<LoanEntity> getLoanByType(int type) {
         return (ArrayList<LoanEntity>) loanRepository.findByType(type);
     }
+
+    //Simulacion de cuotas sin guardadar nada mediante un endpoint
+    public double simulateLoan(double loanAmount, double monthlyInterestRate, int totalPayments) {
+        // Cálculo de la cuota mensual basado en la fórmula de amortización
+        double upPart = Math.pow(1 + monthlyInterestRate, totalPayments) * monthlyInterestRate;
+        double downPart = Math.pow(1 + monthlyInterestRate, totalPayments) - 1;
+        double monthlyPayment = (upPart / downPart) * loanAmount;
+
+        return monthlyPayment;
+    }
+
 
     //------Metodos de evaluacion en automatico----------
 

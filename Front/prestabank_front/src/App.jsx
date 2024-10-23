@@ -2,6 +2,7 @@ import './App.css'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import EnterAccount from './components/enterAccount';
 import CreateAccount from './components/createAccount';
+import LoginAccount from './components/loginAccount';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path='/' element={<EnterAccount/>} />
           <Route path='/create' element={<CreateAccount/>} />
+          <Route path='/login' element={<LoginAccount/>} />
         </Routes>
       </div>
     </Router>

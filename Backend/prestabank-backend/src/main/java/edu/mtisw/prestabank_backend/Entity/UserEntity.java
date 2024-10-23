@@ -14,14 +14,14 @@ public class UserEntity {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    private String email;
-    private String password;
     private String name;
     private String lastName;
+    private String email;
     private String rut;
     private int birthDay;
     private int birthMonth;
     private int birthYear;
+    private String password;
 
     public String getEmail() {
         return email;
