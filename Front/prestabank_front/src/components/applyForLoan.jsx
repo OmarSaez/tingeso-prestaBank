@@ -63,6 +63,29 @@ const ApplyForLoan = () => {
         }
     };
 
+    const handleLoanCreate = async () => {
+        setPapers(["carnet.jpg", "comprobante ingreso.jpg", "deudas.jpg"]);
+        const loan = {
+            idUser: id,
+            type: loanType,
+            yearInterest: yearInterestRate,
+            maxDuration: yearsToPay,
+            income: income,
+            veteran: veteran,
+            totaldebt: totaldebt,
+            loanAmount: requiredLoan,
+            papers: papers,
+        }
+        try {
+            await loanService.create(loan);
+            alert("Se mando la solicitud de credito");
+                
+        } catch (error) {
+            console.error("Error al intentar calcular el préstamo:", error);
+            alert("Ocurrió un error al intentar mandar el préstamo. Por favor, intenta nuevamente.");
+        }
+    }
+
 
     return (
         <div>
@@ -150,6 +173,7 @@ const ApplyForLoan = () => {
 
                         <Button 
                             variant="contained" 
+                            onClick={handleLoanCreate}
                             type="button"
                             sx={{ mt: 2 }}
                         >
