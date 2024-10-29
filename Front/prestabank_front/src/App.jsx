@@ -4,6 +4,8 @@ import EnterAccount from './components/enterAccount';
 import CreateAccount from './components/createAccount';
 import LoginAccount from './components/loginAccount';
 import Home from './components/home';
+import Simulation from './components/simulation';
+import ApplyForLoan from './components/applyForLoan';
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
           <Route path='/' element={<EnterAccount/>} />
           <Route path='/create' element={<CreateAccount/>} />
           <Route path='/login' element={<LoginAccount/>} />
-          <Route path='/home' element={<Home/>} />
+          <Route path='/home/:id' element={<Home/>} />
+          <Route path='/simulation/:id' element={<Simulation/>} />
+          <Route path='/apply-for-loan/:id' element={<ApplyForLoan/>} />
         </Routes>
       </div>
     </Router>

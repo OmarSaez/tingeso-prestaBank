@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 public class LoanSimulationRequest {
     private double loanAmount;
-    private double monthlyInterestRate;
-    private int totalPayments;
+    private double yearInterestRate;
+    private int yearPayments;
 
     public double getLoanAmount() {
         return loanAmount;
@@ -19,19 +19,19 @@ public class LoanSimulationRequest {
         this.loanAmount = loanAmount;
     }
 
-    public double getMonthlyInterestRate() {
-        return monthlyInterestRate;
+    public double getYearInterestRate() {
+        return yearInterestRate;
     }
 
-    public void setMonthlyInterestRate(double monthlyInterestRate) {
-        this.monthlyInterestRate = monthlyInterestRate;
+    public void setYearInterestRate(double yearInterestRate) {
+        this.yearInterestRate = yearInterestRate;
     }
 
-    public int getTotalPayments() {
-        return totalPayments;
+    public int getYearPayments() {
+        return yearPayments;
     }
 
-    public void setTotalPayments(int totalPayments) {
-        this.totalPayments = totalPayments;
+    public void setYearPayments(int yearPayments) {
+        this.yearPayments = yearPayments;
     }
 }

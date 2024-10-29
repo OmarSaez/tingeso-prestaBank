@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
-const NavBar = () => {
+const NavBar = ({ id }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -23,7 +23,7 @@ const NavBar = () => {
                 <Box sx={{ display: 'flex', gap: 2 }}>
                     <Button 
                         color="inherit" 
-                        onClick={() => navigate('/simular-credito')}
+                        onClick={() => navigate(`/simulation/${id}`)}
                         sx={{ 
                             '&:hover': { transform: 'scale(1.1)', transition: '0.3s' }
                         }}
@@ -32,7 +32,7 @@ const NavBar = () => {
                     </Button>
                     <Button 
                         color="inherit" 
-                        onClick={() => navigate('/solicitar-credito')}
+                        onClick={() => navigate(`/apply-for-loan/${id}`)}
                         sx={{ 
                             '&:hover': { transform: 'scale(1.1)', transition: '0.3s' }
                         }}
@@ -47,6 +47,15 @@ const NavBar = () => {
                         }}
                     >
                         Evaluar Crédito
+                    </Button>
+                    <Button 
+                        color="inherit" 
+                        onClick={() => navigate('/mis-solicitudes')}
+                        sx={{ 
+                            '&:hover': { transform: 'scale(1.1)', transition: '0.3s' }
+                        }}
+                    >
+                        Mis solicitudes
                     </Button>
                     <Button 
                         color="inherit" 

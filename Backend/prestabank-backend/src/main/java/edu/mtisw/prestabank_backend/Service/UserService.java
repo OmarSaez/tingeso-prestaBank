@@ -35,6 +35,8 @@ public class UserService {
 
     public UserEntity getUserByRut(String rut){return  userRepository.findByRut(rut);}
 
+    public UserEntity getUserByEmail(String email){return  userRepository.findUserByEmail(email);}
+
     public UserEntity updateUser(UserEntity user){return userRepository.save(user);}
 
     public boolean deleteUser(Long id) throws Exception{

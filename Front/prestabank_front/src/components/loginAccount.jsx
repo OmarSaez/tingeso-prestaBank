@@ -29,7 +29,7 @@ const LoginAccount = () => {
 
             if (user && user.password === password) { // Verifica la contraseña
                 alert("Inicio de sesión exitoso");
-                navigate('/home'); // Cambia esta ruta según a dónde quieras redirigir tras el login exitoso
+                navigate(`/home/${user.id}`); // Cambia esta ruta según a dónde quieras redirigir tras el login exitoso
             } else {
                 alert("El correo o contraseña con erroneos");
             }

@@ -27,6 +27,14 @@ public class UserController {
         UserEntity user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
+
+    //Rescatar un usuario por su correo
+    @GetMapping("/with/{email}")
+    public ResponseEntity<UserEntity> getUserByEmail(@PathVariable String email){
+        UserEntity user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
     //Guardar un usuario
     @PostMapping("/")
     public ResponseEntity<?> saveUser(@RequestBody UserEntity user) {

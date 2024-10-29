@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/loan")
 @CrossOrigin("*")
 public class LoanController {
     @Autowired
     LoanService loanService;
+
+    private static final Logger logger = LoggerFactory.getLogger(LoanController.class); //MEnsaje por cosnla
 
     //URL rescatar todas los prestamos
     @GetMapping("/")
@@ -84,9 +89,10 @@ public class LoanController {
     public ResponseEntity<Double> simulateLoan(@RequestBody LoanSimulationRequest request) {
         double monthlyPayment = loanService.simulateLoan(
                 request.getLoanAmount(),
-                request.getMonthlyInterestRate(),
-                request.getTotalPayments()
+                request.getYearInterestRate(),
+                request.getYearPayments()
         );
+        logger.info("---Valor devuelto al front: {}", monthlyPayment);
         return ResponseEntity.ok(monthlyPayment);
     }
 }
