@@ -6,6 +6,7 @@ import LoginAccount from './components/loginAccount';
 import Home from './components/home';
 import Simulation from './components/simulation';
 import ApplyForLoan from './components/applyForLoan';
+import MyApplication from './components/myApplication';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/home/:id' element={<Home/>} />
           <Route path='/simulation/:id' element={<Simulation/>} />
           <Route path='/apply-for-loan/:id' element={<ApplyForLoan/>} />
+          <Route path='/my-application/:id' element={<MyApplication/>} />
         </Routes>
       </div>
     </Router>

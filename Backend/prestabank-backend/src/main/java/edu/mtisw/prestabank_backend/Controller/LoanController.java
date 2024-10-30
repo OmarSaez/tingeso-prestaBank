@@ -35,7 +35,7 @@ public class LoanController {
         return ResponseEntity.ok(loan);
     }
 
-    //URl rescatar un loan por el ID del USER
+    //URl rescatar todos los loan por el ID del USER
     @GetMapping("/user/{idUser}")
     public ResponseEntity<List<LoanEntity>> getLoansByUser(@PathVariable Long idUser){
         List<LoanEntity> loans = loanService.getLoansByIdUser(idUser);

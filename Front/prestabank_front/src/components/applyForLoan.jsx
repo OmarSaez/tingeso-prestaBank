@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useParams } from 'react-router-dom';
 import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import loanService from '../services/loan.service';
 
 import Button from '@mui/material/Button'; 
-import { Box, Typography, MenuItem, Select, InputLabel, TextField, FormControl, Grid } from '@mui/material';
+import { Box, MenuItem, Select, InputLabel, TextField, FormControl, Grid } from '@mui/material';
 
 
 const ApplyForLoan = () => {
@@ -79,6 +79,7 @@ const ApplyForLoan = () => {
         try {
             await loanService.create(loan);
             alert("Se mando la solicitud de credito");
+            navigate(`/home/${id}`);
                 
         } catch (error) {
             console.error("Error al intentar calcular el préstamo:", error);

@@ -50,7 +50,7 @@ const NavBar = ({ id }) => {
                     </Button>
                     <Button 
                         color="inherit" 
-                        onClick={() => navigate('/mis-solicitudes')}
+                        onClick={() => navigate(`/my-application/${id}`)}
                         sx={{ 
                             '&:hover': { transform: 'scale(1.1)', transition: '0.3s' }
                         }}
