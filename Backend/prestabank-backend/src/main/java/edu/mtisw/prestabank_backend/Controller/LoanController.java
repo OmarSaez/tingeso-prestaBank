@@ -80,10 +80,17 @@ public class LoanController {
 
     //URL update para un Ejecutivo
     @PutMapping("/executive")
-    public ResponseEntity<LoanEntity> updateLoanWithExecutive(@RequestBody LoanEntity changeLoan, @RequestParam int acountYears, @RequestParam ArrayList<Integer> balanceLast12){
-        LoanEntity updateLoan = loanService.updateLoanWithExcutive(changeLoan, acountYears, balanceLast12);
+    public ResponseEntity<LoanEntity> updateLoanWithExecutive(@RequestBody LoanEntity changeLoan, @RequestParam int acountYears, @RequestParam List<Integer> balanceLast12) { // Usa List<Integer>
+
+        // Convertir List<Integer> a ArrayList<Integer>
+        ArrayList<Integer> balanceLast12ArrayList = new ArrayList<>(balanceLast12);
+
+        // Llama al servicio con el ArrayList
+        LoanEntity updateLoan = loanService.updateLoanWithExcutive(changeLoan, acountYears, balanceLast12ArrayList);
+
         return ResponseEntity.ok(updateLoan);
     }
+
 
     @PostMapping("/simulate")
     public ResponseEntity<Double> simulateLoan(@RequestBody LoanSimulationRequest request) {

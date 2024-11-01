@@ -41,7 +41,7 @@ const NavBar = ({ id }) => {
                     </Button>
                     <Button 
                         color="inherit" 
-                        onClick={() => navigate('/evaluar-credito')}
+                        onClick={() => navigate(`/loan-evalue/${id}`)}
                         sx={{ 
                             '&:hover': { transform: 'scale(1.1)', transition: '0.3s' }
                         }}

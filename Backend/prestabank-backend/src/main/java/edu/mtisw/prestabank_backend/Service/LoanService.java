@@ -56,15 +56,17 @@ public class LoanService {
 
         int EvalueWithR4 = debtToIncome(saveLoan);
 
-        //R5 es tabla, no se verifica aca
+        //R5 es tabla, se verifica en front, asi que siempre sera aprobado
 
         int EvalueWithR6 = yearOld(saveLoan);
 
         //La primera vez que se guarda, no se puede ingresar los datos necesarios para usar la funcion R7, son datos proporcionador por el evaluador (ejecutivo), se pone R7=2 de pendiente
 
-        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, 2));
+        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, 2));
 
         saveLoan.setEvalue(newEvalue);
+
+        logger.info("--Lista del LOAN: {}", newEvalue);
 
         return loanRepository.save(saveLoan);
     }
@@ -108,7 +110,7 @@ public class LoanService {
 
         //La primera vez que se guarda, no se puede ingresar los datos necesarios para usar la funcion R7, son datos proporcionador por el evaluador (ejecutivo), se pone R7=2 de pendiente
 
-        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, 2));
+        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, 2));
         changeLoan.setEvalue(newEvalue);
 
         return loanRepository.save(changeLoan);
@@ -116,6 +118,8 @@ public class LoanService {
 
     //Modificar un prestamo usado al momento de evaluar, ya que requiere entradas proporcionadas por un ejecutivo evaluador todo bien
     public LoanEntity updateLoanWithExcutive(LoanEntity changeLoan, int acountYears, ArrayList<Integer> balanceLast12) {
+        logger.info("--Modificador de ejecutivo");
+        logger.info("--Balance12: {}", balanceLast12);
 
         ArrayList<Integer> bankDeposit = new ArrayList<>(); //se inicia la lista de despositos
         ArrayList<Integer> withdrawals = new ArrayList<>();// se inicia la lista de retiros
@@ -134,6 +138,8 @@ public class LoanService {
             }
 
         }
+        logger.info("--retiros: {}", withdrawals);
+        logger.info("--depositos: {}", bankDeposit);
 
         //Re calculo de la cuota
         changeLoan.setMonthlyInteresRate(changeLoan.getYearInterest()/12/100);
@@ -168,7 +174,7 @@ public class LoanService {
         if (acum == 3){EvalueWithR7 = 3;}
         if (acum < 3){EvalueWithR7 = 0;}
 
-        ArrayList<Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, EvalueWithR6, EvalueWithR7));
+        ArrayList<Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, EvalueWithR7));
         changeLoan.setEvalue(newEvalue);
 
         return loanRepository.save(changeLoan);
@@ -313,6 +319,7 @@ public class LoanService {
 
     //R71 saldo minimo del 10% del prestamo solicitado, aca loan es el prestamo en numero, no la entidad
     public int minBalance(int balance, double loan) {
+        logger.info("--Requisito de ahorro1");
         double tenPercentage = loan * 0.1;
         if (balance >= tenPercentage) {
             return 1;
@@ -323,7 +330,7 @@ public class LoanService {
 
     //R72 Saldo positivo los ultimos 12 meses y no retiros del mas del 50%
     public int recordSaving(ArrayList<Integer> balanceLast12, ArrayList<Integer> last12Withdrawals) {
-
+        logger.info("--Requisito de ahorro2");
         //Ciclo que analiza los saldos de los 12 meses
         for (int i = 0; i < balanceLast12.size(); i++) {
             int value = balanceLast12.get(i);
@@ -346,7 +353,7 @@ public class LoanService {
 
     //R73 verificar si los depositos son periodicos y la suma total suman almenos un 5% del ingreso mensual
     public int periodicDeposits(ArrayList<Integer> bankDeposit12, int income) {
-
+        logger.info("--Requisito de ahorro3");
         int frecuencyDeposits = 0;
 
         int acum = 0;
@@ -373,10 +380,10 @@ public class LoanService {
         }
     }
 
-    //PENDIENTE ARREGLARLO
+
     //R74 Si la cuenta de ahorros tiene menos de 2 años el acum debe ser 20% del prestamo solicitado
     public int ratioBalanceVeteran(int acountYears, ArrayList<Integer> balanceLast12, double loan) {
-
+        logger.info("--Requisito de ahorro4");
         //NOTA: ACA LOAN ES EL VALOR DEL PRESTAMO, NO ES LA ENTIDAD LOAN
         int acum = 0;
         //Acumulador que calcula el saldo total de los ultimos 12 meses
@@ -402,7 +409,7 @@ public class LoanService {
 
     //R75 verifica si los retiros de los ultimos 6 meses son mayores a 30% del saldo actual, PENDIENTE LIMITAR A SOLO 6 MESES, se puede hacer con el largo de la lista
     public int recentWithdrawals(ArrayList<Integer> last12Withdrawals, double income){
-
+        logger.info("--Requisito de ahorro5");
         int large = last12Withdrawals.size();
         large = large-6;
         for (int i = large; i < last12Withdrawals.size(); i++) {

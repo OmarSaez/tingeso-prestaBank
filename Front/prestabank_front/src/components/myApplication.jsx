@@ -13,8 +13,8 @@ import loanService from "../services/loan.service";
 import { useParams } from "react-router-dom";
 
 const MyApplication = () => {
-    const navigate = useNavigate();
-    const [loans, setLoans] = useState([]);
+  const navigate = useNavigate();
+  const [loans, setLoans] = useState([]);
   const { id } = useParams();
 
   const init = () => {

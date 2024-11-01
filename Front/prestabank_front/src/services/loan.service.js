@@ -33,9 +33,16 @@ const type = type => {
 }
 
 
-const updateExecutive = (data, years, balance) =>{
-    return httpClient.put('/api/loan/executive', data, {params:{years,balance}});
-}
+const updateExecutive = (data, acountYears, balance) => {
+    const balanceLast12 = balance.join(',');
+    console.log('Balance Last 12 original:', balance);
+    console.log('Balance Last 12:', balanceLast12); // Asegúrate de que esto sea un array
+    console.log('Account Years:', acountYears); // Asegúrate de que esto sea un array
+
+    return httpClient.put('/api/loan/executive', data, {params: { acountYears, balanceLast12 }});
+};
+
+
 
 const simulateLoan = (loanData) => {
     return httpClient.post("/api/loan/simulate", loanData);
