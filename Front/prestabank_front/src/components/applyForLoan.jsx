@@ -24,7 +24,7 @@ const ApplyForLoan = () => {
     const [income, setIncome] = useState('');
     const [veteran, setVeteran] = useState('');
     const [totaldebt, setTotaldebt] = useState('');
-    const [papers, setPapers] = useState('');
+    const [papers, setPapers] = useState([]);
 
     // Restricciones basadas en el tipo de préstamo
     const loanTypeLimits = {
@@ -64,7 +64,7 @@ const ApplyForLoan = () => {
     };
 
     const handleLoanCreate = async () => {
-        setPapers(["carnet.jpg", "comprobante ingreso.jpg", "deudas.jpg"]);
+        setPapers(['archivosComprobantes.pdf'])
         const loan = {
             idUser: id,
             type: loanType,
@@ -79,6 +79,7 @@ const ApplyForLoan = () => {
         try {
             await loanService.create(loan);
             alert("Se mando la solicitud de credito");
+            console.log("Se creo con exito la solitud", loan);
             navigate(`/home/${id}`);
                 
         } catch (error) {
@@ -158,15 +159,15 @@ const ApplyForLoan = () => {
                             type="number" 
                             value={totaldebt}  
                             onChange={(e) => setTotaldebt(e.target.value)} 
-                            label="Deudas totales" 
-                            placeholder="Ingrese el total de deudas que tenga actualmente" 
+                            label="Total de deudas mensuales" 
+                            placeholder="Ingrese el total de deudas que tenga actualmente cada mes" 
                         />
                         <br/>
 
                         <TextField 
                             type="string" 
                             value={papers}  
-                            onChange={(e) => setPapers(e.target.value)} 
+                            onChange={(e) => setPapers[1](e.target.value)} 
                             label="Comprobantes de salario, deudas, valor del inmueble" 
                             placeholder="Ingrese un archivo PDF de los comprobantes" 
                         />

@@ -43,7 +43,6 @@ const updateExecutive = (data, acountYears, balance) => {
 };
 
 
-
 const simulateLoan = (loanData) => {
     return httpClient.post("/api/loan/simulate", loanData);
 }

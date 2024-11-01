@@ -42,6 +42,10 @@ public class LoanService {
     //Guardar un prestamo todo bien
     public LoanEntity saveLoan(LoanEntity saveLoan) {
 
+        saveLoan.setIngesurce(saveLoan.getLoanAmount()*0.003);
+        saveLoan.setCommission(saveLoan.getLoanAmount()*0.1);
+        saveLoan.setTotalCost(totalCost(saveLoan.getLoanAmount(), saveLoan.getIngesurce(), saveLoan.getCommission()));
+
         saveLoan.setMonthlyInteresRate(saveLoan.getYearInterest()/12/100);
         saveLoan.setTotalPayments(saveLoan.getMaxDuration()*12);
 
@@ -66,7 +70,7 @@ public class LoanService {
 
         saveLoan.setEvalue(newEvalue);
 
-        logger.info("--Lista del LOAN: {}", newEvalue);
+        logger.info("--Lista de la evualuacion automatica: {}", newEvalue);
 
         return loanRepository.save(saveLoan);
     }
@@ -92,6 +96,12 @@ public class LoanService {
 
     //Modificar un prestamo todo bien
     public LoanEntity updateLoan(LoanEntity changeLoan) {
+
+        changeLoan.setIngesurce(changeLoan.getLoanAmount()*0.003);
+        changeLoan.setCommission(changeLoan.getLoanAmount()*0.1);
+        changeLoan.setTotalCost(totalCost(changeLoan.getLoanAmount(), changeLoan.getIngesurce(), changeLoan.getCommission()));
+
+
         changeLoan.setMonthlyInteresRate(changeLoan.getYearInterest()/12/100);
         changeLoan.setTotalPayments(changeLoan.getMaxDuration()*12);
         changeLoan.setMonthlyPayment(Calculo(changeLoan));
@@ -120,6 +130,10 @@ public class LoanService {
     public LoanEntity updateLoanWithExcutive(LoanEntity changeLoan, int acountYears, ArrayList<Integer> balanceLast12) {
         logger.info("--Modificador de ejecutivo");
         logger.info("--Balance12: {}", balanceLast12);
+
+        changeLoan.setIngesurce(changeLoan.getLoanAmount()*0.003);
+        changeLoan.setCommission(changeLoan.getLoanAmount()*0.1);
+        changeLoan.setTotalCost(totalCost(changeLoan.getLoanAmount(), changeLoan.getIngesurce(), changeLoan.getCommission()));
 
         ArrayList<Integer> bankDeposit = new ArrayList<>(); //se inicia la lista de despositos
         ArrayList<Integer> withdrawals = new ArrayList<>();// se inicia la lista de retiros
@@ -226,6 +240,16 @@ public class LoanService {
         return monthlyPayment;
     }
 
+    public double insurance(double loanAmount){
+        return loanAmount*0.0003;
+    }
+    public double commission(double loanAmount){
+        return loanAmount*0.01;
+    }
+    public double totalCost(double loanAmount, double insurance, double commission){
+        logger.info("--La suma del costo total es {} + {} + {} + 20000", loanAmount, insurance, commission);
+        return loanAmount+insurance+commission+20000;
+    }
 
     //------Metodos de evaluacion en automatico----------
 

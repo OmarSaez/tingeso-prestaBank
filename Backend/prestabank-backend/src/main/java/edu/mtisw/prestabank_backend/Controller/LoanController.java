@@ -45,6 +45,7 @@ public class LoanController {
     //URL guardar un prestamo
     @PostMapping("/")
     public ResponseEntity<LoanEntity> saveLoan(@RequestBody LoanEntity loan){
+        logger.info("--Interes anual al entrar PostMapping: {}", loan.getYearInterest());
         LoanEntity newLoan = loanService.saveLoan(loan);
         return ResponseEntity.ok(newLoan);
     }
@@ -91,7 +92,7 @@ public class LoanController {
         return ResponseEntity.ok(updateLoan);
     }
 
-
+    //URL para hace simulacion de cuota mensual
     @PostMapping("/simulate")
     public ResponseEntity<Double> simulateLoan(@RequestBody LoanSimulationRequest request) {
         double monthlyPayment = loanService.simulateLoan(
@@ -102,4 +103,5 @@ public class LoanController {
         logger.info("---Valor devuelto al front: {}", monthlyPayment);
         return ResponseEntity.ok(monthlyPayment);
     }
+
 }

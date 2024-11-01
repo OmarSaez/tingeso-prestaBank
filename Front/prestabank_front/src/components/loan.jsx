@@ -66,6 +66,13 @@ const Loan = () => {
         }
     };
 
+    const getColor = (score) => {
+        if (score == 8 || score == 7) return '#FF0000'; // rojo para rechazado o cancelada
+        if (score == 6) return '#00FF00'; // verde si se aprobo
+        if (score == 4 || score == 5) return '#FFC933'; //amarillo si esta previo a ser aprobada
+        return '#4169E1'; // azul para todo lo demás
+      };
+
     const getTypeText = (type) => {
         switch (type) {
             case 1: return "Primera vivienda";
@@ -190,7 +197,7 @@ const Loan = () => {
 
             {/* Datos solicud */}
             <h4>Datos de la solicitud:</h4>
-            <p style={{ color: '#4169E1' }}>Estado: {getStatusText(loanData.status)}</p>
+            <p style={{ color: getColor(loanData.status), fontWeight: 'bold'  }}>Estado: {getStatusText(loanData.status)}</p>
             <p>Tipo de Crédito: {getTypeText(loanData.type)}</p>
             <p>Valor del prestamo: {new Intl.NumberFormat("es-CL", { style: "decimal", minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(loanData.loanAmount)}</p>
             <p>Interés Anual: {loanData.yearInterest}&nbsp;&nbsp; 

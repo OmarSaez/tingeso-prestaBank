@@ -1,5 +1,6 @@
 package edu.mtisw.prestabank_backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -19,7 +20,7 @@ public class LoanEntity {
     private int status; //                  indica si el credito esta: revision inicial(1), pendiente de documentacion(2), en evaluacion(3), pre-aprobado(4), arpobacion final(5), aprobada(6), rechazada(7), cancelada por el cliente(8), en desembolso(9)
 
     private int type; //Se agrega-          Tipo de credito,
-    private double yearInterest; //Se agrega-  Interes anual
+    private double yearInterest;
     int maxDuration; //Se agrega-           Tiempo que pagara las cuotas, va por años
     //Quitado temporalmente: private int maxLoan; //Se agrega-       Maximo monto del credito (financiamiento tope)
     private int income; //Se agrega-        Ingresos mensuales (Revisar con combrobante)
@@ -31,6 +32,10 @@ public class LoanEntity {
     private double monthlyInteresRate; //   Tasa de interes mensual (Tasa anual / 12 / 100) r
     private int totalPayments; //           Numero total de pagos (plazo en años x 12) n
 
+    private double ingesurce;
+    private double commission;
+    private double totalCost;
+
     private ArrayList<Integer> saving; //   Puntos de capacidad de ahorro
 
     private ArrayList<String> papers; //Se agrega- Documentacion a evaluar manualmente
@@ -38,7 +43,7 @@ public class LoanEntity {
     private ArrayList<Integer> evalue; //   Listado que indica automaticamente las cosas 0=rechazado, 1=aprobado, 2=pendiente. 3=Requiere otra revision [R1, R2, R3, R4, R6, R7]
 
 
-    public LoanEntity(Long idUser, int type, double yearInterest, int maxDuration, int maxLoan, int income, int veteran, int totaldebt, double monthlyPayment, double loanAmount, double monthlyInteresRate, int totalPayments, ArrayList<Integer> saving, ArrayList<String> papers, ArrayList<Integer> evalue) {
+    public LoanEntity(Long idUser, int type, double yearInterest, int maxDuration, int maxLoan, int income, int veteran, int totaldebt, double monthlyPayment, double loanAmount, double monthlyInteresRate, int totalPayments, double ingesurce, double commission, double totalCost, ArrayList<Integer> saving, ArrayList<String> papers, ArrayList<Integer> evalue) {
         this.idUser = idUser;
         this.status = 1;
         this.type = type;
@@ -52,6 +57,9 @@ public class LoanEntity {
         this.loanAmount = loanAmount;
         this.monthlyInteresRate = monthlyInteresRate;
         this.totalPayments = totalPayments;
+        this.ingesurce = ingesurce;
+        this.commission = commission;
+        this.totalCost = totalCost;
         this.saving = saving;
         this.papers = papers;
         this.evalue = evalue;
@@ -72,9 +80,7 @@ public class LoanEntity {
         this.type = type;
     }
 
-    public void setYearInterest(int yearInterest) {
-        this.yearInterest = yearInterest;
-    }
+    public void setYearInterest(double yearInterest) {this.yearInterest = yearInterest;}
 
     public void setMaxDuration(int maxDuration) {
         this.maxDuration = maxDuration;
@@ -125,5 +131,22 @@ public class LoanEntity {
 
     public void setEvalue(ArrayList<Integer> evalue) {
         this.evalue = evalue;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public void setCommission(double commission) {
+        this.commission = commission;
+    }
+
+    public void setIngesurce(double ingesurce) {
+        this.ingesurce = ingesurce;
     }
 }

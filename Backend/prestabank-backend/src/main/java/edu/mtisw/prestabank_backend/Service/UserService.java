@@ -21,11 +21,11 @@ public class UserService {
     public ArrayList<UserEntity> getUsers() {return (ArrayList<UserEntity>) userRepository.findAll(); }
 
     public UserEntity saveUser(UserEntity user){
-        logger.info("--Se entro al guardar user bien");
+
         UserEntity exists1 = userRepository.findUserByEmail(user.getEmail());
         UserEntity exists2 = userRepository.findByRut(user.getRut());
         if (exists1 != null || exists2 != null){
-            logger.info("--Se evaluo la situacion y dio NULL");
+            logger.info("--Se evaluo la situacion y el usuario ya existe");
             return null;
         }
         logger.info("--Se evaluo la situacion y se guardo el user");
