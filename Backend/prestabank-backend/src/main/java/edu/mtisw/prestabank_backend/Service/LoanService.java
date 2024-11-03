@@ -120,7 +120,7 @@ public class LoanService {
 
         //La primera vez que se guarda, no se puede ingresar los datos necesarios para usar la funcion R7, son datos proporcionador por el evaluador (ejecutivo), se pone R7=2 de pendiente
 
-        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, 2));
+        ArrayList <Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, changeLoan.getEvalue().get(1), EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, 2));
         changeLoan.setEvalue(newEvalue);
 
         return loanRepository.save(changeLoan);
@@ -175,6 +175,7 @@ public class LoanService {
 
         ArrayList<Integer> saving = savingSkills(changeLoan, acountYears, balanceLast12, bankDeposit, withdrawals);
         changeLoan.setSaving(saving);
+        logger.info("Lista de la evaluacion de ahorro: {}", saving);
         int acum = 0;
         //Acumulador de los puntos de ahorro
         for (int i = 0; i < saving.size(); i++) {
@@ -188,7 +189,7 @@ public class LoanService {
         if (acum == 3){EvalueWithR7 = 3;}
         if (acum < 3){EvalueWithR7 = 0;}
 
-        ArrayList<Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, 2, EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, EvalueWithR7));
+        ArrayList<Integer> newEvalue = new ArrayList<>(Arrays.asList(EvalueWithR1, changeLoan.getEvalue().get(1), EvalueWithR3, EvalueWithR4, 1, EvalueWithR6, EvalueWithR7));
         changeLoan.setEvalue(newEvalue);
 
         return loanRepository.save(changeLoan);
@@ -297,9 +298,11 @@ public class LoanService {
     public int debtToIncome(LoanEntity loan) {
         int income = loan.getIncome();
         double debt = loan.getTotaldebt()+loan.getMonthlyPayment();
-        double ratio = (income / debt) * 100;
+        double ratio = (debt / income) * 100;
+        logger.info("Deuda total {} + {} = {}", loan.getTotaldebt(), loan.getMonthlyPayment(), debt);
+        logger.info("Ratio: {} / {} = {}", debt, income, ratio);
 
-        if (ratio > income*0.5) {
+        if (ratio > 50) {
             return 0;
         } else {
             return 1;
@@ -336,7 +339,7 @@ public class LoanService {
         //Agremos R74
         listEvalue.add(ratioBalanceVeteran(acountYears, balanceLast12, loan.getLoanAmount()));
         //Agregamos R75
-        listEvalue.add(recentWithdrawals(withdrawals, loan.getIncome()));
+        listEvalue.add(recentWithdrawals(withdrawals, balanceLast12));
 
         return listEvalue;
     }
@@ -393,10 +396,12 @@ public class LoanService {
 
         //Verifica la frecuencia de deposito
         if (frecuencyDeposits > 3) {
+            logger.info("++ la frecuencia de depositos no es fuciente {}", frecuencyDeposits);
             return 0;
         }
 
         //verifica si el acumulado es mayor al 5% del ingreso mensual
+        logger.info("--Acum de los depositos: {}, ingresos: {}", acum, income);
         if (acum < income * 0.05) {
             return 0;
         } else {
@@ -432,13 +437,14 @@ public class LoanService {
     }
 
     //R75 verifica si los retiros de los ultimos 6 meses son mayores a 30% del saldo actual, PENDIENTE LIMITAR A SOLO 6 MESES, se puede hacer con el largo de la lista
-    public int recentWithdrawals(ArrayList<Integer> last12Withdrawals, double income){
+    public int recentWithdrawals(ArrayList<Integer> last12Withdrawals, ArrayList<Integer> balance12){
         logger.info("--Requisito de ahorro5");
         int large = last12Withdrawals.size();
-        large = large-6;
-        for (int i = large; i < last12Withdrawals.size(); i++) {
-            int value = last12Withdrawals.get(i);
-            if (value > income * 0.3) {return 0;}
+        large = large-5;
+        for (int i = 0; i < large; i++) {
+            int withdrawal = last12Withdrawals.get(i+1);
+            int balance = balance12.get(i);
+            if (withdrawal > balance * 0.3) {return 0;}
         }
         //si registro todos los meses y no retorno cero, entonces esta aprobado este punto
         return 1;
