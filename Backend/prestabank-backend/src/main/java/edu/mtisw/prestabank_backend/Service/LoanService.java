@@ -42,8 +42,8 @@ public class LoanService {
     //Guardar un prestamo todo bien
     public LoanEntity saveLoan(LoanEntity saveLoan) {
 
-        saveLoan.setIngesurce(saveLoan.getLoanAmount()*0.003);
-        saveLoan.setCommission(saveLoan.getLoanAmount()*0.1);
+        saveLoan.setIngesurce(insurance(saveLoan.getLoanAmount()));
+        saveLoan.setCommission(commission(saveLoan.getLoanAmount()));
         saveLoan.setTotalCost(totalCost(saveLoan.getLoanAmount(), saveLoan.getIngesurce(), saveLoan.getCommission()));
 
         saveLoan.setMonthlyInteresRate(saveLoan.getYearInterest()/12/100);
@@ -97,8 +97,8 @@ public class LoanService {
     //Modificar un prestamo todo bien
     public LoanEntity updateLoan(LoanEntity changeLoan) {
 
-        changeLoan.setIngesurce(changeLoan.getLoanAmount()*0.003);
-        changeLoan.setCommission(changeLoan.getLoanAmount()*0.1);
+        changeLoan.setIngesurce(insurance(changeLoan.getLoanAmount()));
+        changeLoan.setCommission(commission(changeLoan.getLoanAmount()));
         changeLoan.setTotalCost(totalCost(changeLoan.getLoanAmount(), changeLoan.getIngesurce(), changeLoan.getCommission()));
 
 
@@ -131,8 +131,8 @@ public class LoanService {
         logger.info("--Modificador de ejecutivo");
         logger.info("--Balance12: {}", balanceLast12);
 
-        changeLoan.setIngesurce(changeLoan.getLoanAmount()*0.003);
-        changeLoan.setCommission(changeLoan.getLoanAmount()*0.1);
+        changeLoan.setIngesurce(insurance(changeLoan.getLoanAmount()));
+        changeLoan.setCommission(commission(changeLoan.getLoanAmount()));
         changeLoan.setTotalCost(totalCost(changeLoan.getLoanAmount(), changeLoan.getIngesurce(), changeLoan.getCommission()));
 
         ArrayList<Integer> bankDeposit = new ArrayList<>(); //se inicia la lista de despositos
