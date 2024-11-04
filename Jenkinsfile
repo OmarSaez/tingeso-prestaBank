@@ -19,10 +19,11 @@ pipeline {
         stage('Run Tests') {
             steps {
                 dir('Backend/prestabank-backend') {
-                    sh './mvnw test'
+                    sh 'chmod +x mvnw && ./mvnw test'
                 }
             }
         }
+
 
         stage('Build Docker Images') {
             steps {
