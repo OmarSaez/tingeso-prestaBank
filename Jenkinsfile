@@ -18,9 +18,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                script {
-                    // Ejecutar pruebas unitarias
-                    sh './mvnw test' // Ajusta este comando según tu configuración de Maven
+                dir('Backend/prestabank-backend') {
+                    sh './mvnw test'
                 }
             }
         }
@@ -28,9 +27,9 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Construir imágenes Docker
-                    sh "docker build -t ${BACKEND_IMAGE} -f backend/Dockerfile ."
-                    sh "docker build -t ${FRONTEND_IMAGE} -f frontend/Dockerfile ."
+                    // Construir imágenes Docker usando rutas específicas
+                    sh "docker build -t ${BACKEND_IMAGE} -f Backend/prestabank-backend/Dockerfile Backend/prestabank-backend"
+                    sh "docker build -t ${FRONTEND_IMAGE} -f Frontend/prestabank-frontend/Dockerfile Frontend/prestabank-frontend"
                 }
             }
         }
