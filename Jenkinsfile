@@ -24,6 +24,16 @@ pipeline {
             }
         }
 
+        stage('Verify Docker Access') {
+            steps {
+                script {
+                    sh "docker --version"
+                    sh "docker info"
+                }
+            }
+        }
+
+
         stage('Build Backend') {
             steps {
                 dir('Backend/prestabank-backend') {
