@@ -215,10 +215,12 @@ const Loan = () => {
             {/* Sección de requisitos */}
             <h2>Estados de los Requisitos:</h2>
 
-            <h5>Requisito 1: Relación Cuota/Ingreso</h5>
+            <h4>Requisito 1: Relación Cuota/Ingreso</h4>
+            <p>La relacion cuota ingreso no debe ser mayor al 35%</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[0])}</p>
 
-            <h5>Requisito 2: Historial Crediticio del Cliente</h5>
+            <h4>Requisito 2: Historial Crediticio del Cliente</h4>
+            <p>Se debe revisar el historial crediticio del cliente en DICOM, esta es una revision manual que debe hacer un ejecutivo</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[1])}</p>
 
             <Button 
@@ -250,7 +252,8 @@ const Loan = () => {
                 </DialogActions>
             </Dialog>
 
-            <h5>Requisito 3: Antigüedad Laboral y Estabilidad</h5>
+            <h4>Requisito 3: Antigüedad Laboral y Estabilidad</h4>
+            <p>Se verifica que el solicitante tenga almenos 2 años en us trabajo actual, no tomar en cuenta el estado si es un independiente ya que no aplica</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[2])}</p>
 
             {/* Mensaje de advertencia en texto rojo si el solicitante es independiente */}
@@ -261,16 +264,20 @@ const Loan = () => {
             )}
 
 
-            <h5>Requisito 4: Relación Deuda/Ingreso </h5>
+            <h4>Requisito 4: Relación Deuda/Ingreso </h4>
+            <p>La relacion entre la deuda incluyendo la proyeccion de la cuota mensual y el ingreso del solicitante no debe ser mayor al 50%</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[3])}</p>
 
-            <h5>Requisito 5: Monto Máximo de Financiamiento</h5>
+            <h4>Requisito 5: Monto Máximo de Financiamiento</h4>
+            <p>Estas limitante son controladas al momento que se realiza la solicitud</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[4])}</p>
 
-            <h5>Requisito 6: Edad del Solicitante </h5>
+            <h4>Requisito 6: Edad del Solicitante </h4>
+            <p>El solicitante no puede tener 70 años o más</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[5])}</p>
 
-            <h5>Requisito 7: Capacidad de Ahorro</h5>
+            <h4>Requisito 7: Capacidad de Ahorro</h4>
+            <p>Para calcular los diversos factores y asi evaluar la capacidad de ahorro del solcitante porfavor ingrese los años de la cuenta de ahorro y el saldo de los ultimos 12 meses</p>
             <p>Estado: {getRequirementStatus(loanData.evalue[6])}</p>
 
             {/* Campo de entrada para los años de la cuenta de ahorro */}

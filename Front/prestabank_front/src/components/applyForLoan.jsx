@@ -70,8 +70,8 @@ const ApplyForLoan = () => {
             veteran: veteran,
             totaldebt: totaldebt,
             loanAmount: requiredLoan,
+            isIndependent: isIndependent === 'yes' ? 1 : 0, // Asigna 1 si seleccionó "Sí", de lo contrario, 0
             papers: papers,
-            isIndependent: isIndependent === 'yes' ? 1 : 0 // Asigna 1 si seleccionó "Sí", de lo contrario, 0
         };
         try {
             await loanService.create(loan);
