@@ -19,7 +19,7 @@ const Loan = () => {
     const [open, setOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('');
     const [selectedRequirement, setSelectedRequirement] = useState('');
-    const [openRequestR2, setOpenRequestR2] = useState(false); // Cambié a false para abrir/cerrar correctamente
+    const [openRequestR2, setOpenRequestR2] = useState(false); //false para abrir/cerrar correctamente
     const [accountYears, setAccountYears] = useState(""); // Años de la cuenta de ahorro
     const [balanceLast12, setBalanceLast12] = useState(Array(12).fill("")); // Balance de los últimos 12 meses
 
@@ -250,8 +250,16 @@ const Loan = () => {
                 </DialogActions>
             </Dialog>
 
-            <h5>Requisito 3: Antigüedad Laboral y Estabilidad </h5>
+            <h5>Requisito 3: Antigüedad Laboral y Estabilidad</h5>
             <p>Estado: {getRequirementStatus(loanData.evalue[2])}</p>
+
+            {/* Mensaje de advertencia en texto rojo si el solicitante es independiente */}
+            {loanData.isIndependent === 1 && (
+                <p style={{ color: 'red', fontWeight: 'bold' }}>
+                    Advertencia: El solicitante es independiente. Se debe revisar sus ingresos de los últimos 2 o más años para evaluar su estabilidad financiera.
+                </p>
+            )}
+
 
             <h5>Requisito 4: Relación Deuda/Ingreso </h5>
             <p>Estado: {getRequirementStatus(loanData.evalue[3])}</p>

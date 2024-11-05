@@ -1,21 +1,18 @@
 import * as React from 'react';
-import { useState} from "react";
+import { useState } from "react";
 import { useParams } from 'react-router-dom';
 import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import loanService from '../services/loan.service';
 
 import Button from '@mui/material/Button'; 
-import { Box, MenuItem, Select, InputLabel, TextField, FormControl, Grid } from '@mui/material';
-
+import { Box, MenuItem, Select, InputLabel, TextField, FormControl, Grid, FormControlLabel, Radio, RadioGroup, FormLabel } from '@mui/material';
 
 const ApplyForLoan = () => {
 
     const navigate = useNavigate();
-    // Extraemos el id de la URL
     const { id } = useParams();
 
-    // Estados para los inputs y la cuota mensual calculada
     const [loanType, setLoanType] = useState('');
     const [propertyValue, setPropertyValue] = useState('');
     const [requiredLoan, setRequiredLoan] = useState('');
@@ -25,8 +22,8 @@ const ApplyForLoan = () => {
     const [veteran, setVeteran] = useState('');
     const [totaldebt, setTotaldebt] = useState('');
     const [papers, setPapers] = useState([]);
+    const [isIndependent, setIsIndependent] = useState(''); // Estado para la selección "Sí" o "No"
 
-    // Restricciones basadas en el tipo de préstamo
     const loanTypeLimits = {
         "1": { maxLoanPercentage: 80, maxYears: 30, interestRate: 4.5 },
         "2": { maxLoanPercentage: 70, maxYears: 20, interestRate: 5.5 },
@@ -34,7 +31,6 @@ const ApplyForLoan = () => {
         "4": { maxLoanPercentage: 50, maxYears: 15, interestRate: 5.0 },
     };
 
-    // Manejar cambio del tipo de préstamo
     const handleLoanTypeChange = (e) => {
         const selectedType = e.target.value;
         setLoanType(selectedType);
@@ -64,7 +60,7 @@ const ApplyForLoan = () => {
     };
 
     const handleLoanCreate = async () => {
-        setPapers(['archivosComprobantes.pdf'])
+        setPapers(['archivosComprobantes.pdf']);
         const loan = {
             idUser: id,
             type: loanType,
@@ -75,30 +71,30 @@ const ApplyForLoan = () => {
             totaldebt: totaldebt,
             loanAmount: requiredLoan,
             papers: papers,
-        }
+            isIndependent: isIndependent === 'yes' ? 1 : 0 // Asigna 1 si seleccionó "Sí", de lo contrario, 0
+        };
         try {
             await loanService.create(loan);
-            alert("Se mando la solicitud de credito");
-            console.log("Se creo con exito la solitud", loan);
+            alert("Se mandó la solicitud de crédito");
+            console.log("Se creó con éxito la solicitud", loan);
             navigate(`/home/${id}`);
                 
         } catch (error) {
             console.error("Error al intentar calcular el préstamo:", error);
             alert("Ocurrió un error al intentar mandar el préstamo. Por favor, intenta nuevamente.");
         }
-    }
-
+    };
 
     return (
         <div>
             <NavBar id={id} />
             <h1>Solicitar un crédito</h1>
-            <h2>Porfavor ingrese todos los datos y al final comprobantes de ellos</h2>
+            <h2>Por favor ingrese todos los datos y al final comprobantes de ellos</h2>
             <Box sx={{ '& > :not(style)': { ml: 0, mr: -30, mt: 6, mb: 5 } }}>
                 <Grid container spacing={1}>
                     <FormControl fullWidth margin="normal">
                         
-                        <InputLabel>Tipo de préstamo</InputLabel>
+                    <InputLabel>Tipo de préstamo</InputLabel>
                         <Select value={loanType} onChange={handleLoanTypeChange} label="Tipo de préstamo">
                             <MenuItem value="" disabled>Selecciona el tipo de préstamo</MenuItem>
                             <MenuItem value="1">Primera vivienda</MenuItem>
@@ -173,13 +169,25 @@ const ApplyForLoan = () => {
                         />
                         <br/>
 
+                        <FormControl component="fieldset" margin="normal">
+                            <FormLabel component="legend">¿Eres trabajador independiente?</FormLabel>
+                            <RadioGroup
+                                row
+                                value={isIndependent}
+                                onChange={(e) => setIsIndependent(e.target.value)}
+                            >
+                                <FormControlLabel value="yes" control={<Radio />} label="Sí" />
+                                <FormControlLabel value="no" control={<Radio />} label="No" />
+                            </RadioGroup>
+                        </FormControl>
+
                         <Button 
                             variant="contained" 
                             onClick={handleLoanCreate}
                             type="button"
                             sx={{ mt: 2 }}
                         >
-                            Enviar solicitud de credito
+                            Enviar solicitud de crédito
                         </Button>
 
                     </FormControl>
@@ -197,7 +205,6 @@ const ApplyForLoan = () => {
             <h4>Dependiendo del tipo de préstamo cambiará el monto máximo que puedas solicitar</h4>
         </div>
     );
-
 };
 
 export default ApplyForLoan;

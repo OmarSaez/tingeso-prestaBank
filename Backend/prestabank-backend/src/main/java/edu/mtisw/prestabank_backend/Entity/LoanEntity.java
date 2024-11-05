@@ -36,6 +36,8 @@ public class LoanEntity {
     private double commission;
     private double totalCost;
 
+    private int isInndependent;
+
     private ArrayList<Integer> saving; //   Puntos de capacidad de ahorro
 
     private ArrayList<String> papers; //Se agrega- Documentacion a evaluar manualmente
@@ -43,7 +45,7 @@ public class LoanEntity {
     private ArrayList<Integer> evalue; //   Listado que indica automaticamente las cosas 0=rechazado, 1=aprobado, 2=pendiente. 3=Requiere otra revision [R1, R2, R3, R4, R6, R7]
 
 
-    public LoanEntity(Long idUser, int type, double yearInterest, int maxDuration, int maxLoan, int income, int veteran, int totaldebt, double monthlyPayment, double loanAmount, double monthlyInteresRate, int totalPayments, double ingesurce, double commission, double totalCost, ArrayList<Integer> saving, ArrayList<String> papers, ArrayList<Integer> evalue) {
+    public LoanEntity(Long idUser, int type, double yearInterest, int maxDuration, int maxLoan, int income, int veteran, int totaldebt, double monthlyPayment, double loanAmount, double monthlyInteresRate, int totalPayments, double ingesurce, double commission, double totalCost, int isInndependent, ArrayList<Integer> saving, ArrayList<String> papers, ArrayList<Integer> evalue) {
         this.idUser = idUser;
         this.status = 1;
         this.type = type;
@@ -60,6 +62,7 @@ public class LoanEntity {
         this.ingesurce = ingesurce;
         this.commission = commission;
         this.totalCost = totalCost;
+        this.isInndependent = isInndependent;
         this.saving = saving;
         this.papers = papers;
         this.evalue = evalue;
@@ -133,20 +136,13 @@ public class LoanEntity {
         this.evalue = evalue;
     }
 
+    public void setIsInndependent(int isInndependent) {this.isInndependent = isInndependent;}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) {this.id = id;}
 
-    public void setTotalCost(double totalCost) {
-        this.totalCost = totalCost;
-    }
+    public void setTotalCost(double totalCost) {this.totalCost = totalCost;}
 
-    public void setCommission(double commission) {
-        this.commission = commission;
-    }
+    public void setCommission(double commission) {this.commission = commission;}
 
-    public void setIngesurce(double ingesurce) {
-        this.ingesurce = ingesurce;
-    }
+    public void setIngesurce(double ingesurce) {this.ingesurce = ingesurce;}
 }
