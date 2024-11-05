@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build --no-cache -t ${BACKEND_IMAGE} -f Backend/prestabank-backend/Dockerfile Backend/prestabank-backend"
-                    sh "docker build -t ${FRONTEND_IMAGE} -f Frontend/prestabank-frontend/Dockerfile Frontend/prestabank-frontend"
+                    sh "docker build -t ${FRONTEND_IMAGE} -f Front/prestabank_front/Dockerfile Front/prestabank_front"
                 }
             }
         }
