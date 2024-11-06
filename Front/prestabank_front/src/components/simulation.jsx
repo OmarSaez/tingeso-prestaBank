@@ -140,7 +140,7 @@ const Simulation = () => {
                             type="button"
                             sx={{ mt: 2 }}
                         >
-                            Calcular
+                            Calcular credito Chile
                         </Button>
 
                     </FormControl>
