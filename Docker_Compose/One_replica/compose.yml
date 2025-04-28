@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  frontend:
+    container_name: payroll-frontend
+    image: omarsaez/prestabank-frontend:latest
+    ports:
+      - "5173:80"
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+
+  backend:
+    container_name: payroll-backend
+    image: omarsaez/prestabank-backend:latest
+    ports:
+      - "8050:8050"
+    environment:
+      - DB_HOST=192.168.1.166
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dbtingeso
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+
+

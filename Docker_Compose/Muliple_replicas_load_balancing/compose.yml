@@ -1,0 +1,83 @@
+version: "3.8"
+services:
+  frontend1:
+    image: omarsaez/prestabank-frontend:latest 
+    networks:
+      - frontend-network
+
+  frontend2:
+    image: omarsaez/prestabank-frontend:latest 
+    networks:
+      - frontend-network
+
+  frontend3:
+    image: omarsaez/prestabank-frontend:latest 
+    networks:
+      - frontend-network
+
+  backend1:
+    image: omarsaez/prestabank-backend:latest 
+    environment:
+      - DB_HOST=db  # Usa el nombre del servicio en lugar de una IP fija
+    networks:
+      - backend-network
+
+  backend2: 
+    image: omarsaez/prestabank-backend:latest 
+    environment:
+      - DB_HOST=db  # Usa el nombre del servicio en lugar de una IP fija
+    networks:
+      - backend-network 
+
+  backend3: 
+    image: omarsaez/prestabank-backend:latest 
+    environment:
+      - DB_HOST=db  # Usa el nombre del servicio en lugar de una IP fija
+    networks:
+      - backend-network
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dbtingeso
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  nginx-frontend:
+    image: nginx:latest
+    ports:
+      - "5173:80"
+    volumes:
+      - ./nginx-prestabank-frontend.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend1
+      - frontend2
+      - frontend3
+    networks:
+      - frontend-network
+
+  nginx-backend:
+    image: nginx:latest
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./nginx-prestabank-backend.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+  backend-network:
+
+volumes:
+  db_data:
